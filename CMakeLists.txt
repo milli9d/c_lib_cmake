@@ -23,7 +23,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 add_subdirectory(${PROJECT_SOURCE_DIR}/components)
 
 # add test bench program
-add_executable(test_bench test_bench.c)
+add_executable(test_bench test_bench.cpp)
 
 target_link_libraries(test_bench PRIVATE
     C::array
