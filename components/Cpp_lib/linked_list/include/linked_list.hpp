@@ -51,6 +51,14 @@ namespace cpp_lib
 
         /* private API */
         node_t *new_node(list_data_t val);
+
+    public:
+        /* iterator definition */
+        class iterator {
+        public:
+        private:
+            node_t *_itr;
+        };
     };
 
 }

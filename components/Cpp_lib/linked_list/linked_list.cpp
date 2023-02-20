@@ -227,7 +227,8 @@ namespace cpp_lib
     /**
      * @brief Default Constructor
      */
-    byte_list::byte_list() : _head(NULL), _sz(0u)
+    byte_list::byte_list()
+        : _head(NULL), _sz(0u)
     {
         fprintf(stdout, "Constructed byte list object.\n");
     }
