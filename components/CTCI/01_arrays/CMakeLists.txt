@@ -27,3 +27,18 @@ target_link_libraries(ex01_02
 )
 
 add_custom_target(r_ex01_02 COMMAND ex01_02)
+
+# ======================= CH 01 EX 07
+add_executable(ex01_07 ex01_07.c)
+
+# includes
+target_include_directories(ex01_07 PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(ex01_07 
+    PRIVATE     C::array
+    PRIVATE     C::hashmap
+)
+
+add_custom_target(r_ex01_07 COMMAND ex01_07)
