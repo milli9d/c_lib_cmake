@@ -24,30 +24,20 @@ void swap(int *a, int *b)
 void bubble_sort(int *arr, size_t sz)
 {
     /* sanity checks */
-    if (arr == NULL || sz == 0u)
-    {
-        return;
-    }
+    if (arr == NULL || sz == 0u) { return; }
 
-    for (int i = 0; i < sz; i++)
-    {
+    for (int i = 0; i < sz; i++) {
         int count_swap = 0;
-        for (int j = 0; j < sz - 1u; j++)
-        {
+        for (int j = 0; j < sz - 1u; j++) {
             /* swap if first is greater than next */
             int *curr = &arr[j];
             int *next = &arr[j + 1];
-
-            if (*curr > *next)
-            {
+            if (*curr > *next) {
                 swap(curr, next);
                 count_swap++;
             }
         }
-        if (count_swap == 0)
-        {
-            return;
-        }
+        if (count_swap == 0) { return; }
     }
 }
 

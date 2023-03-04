@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "include/linked_list.h"
+#include "linked_list.h"
 
 int main(int argc, char **argv)
 {

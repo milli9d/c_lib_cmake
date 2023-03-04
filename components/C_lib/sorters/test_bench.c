@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "include/sorters.h"
+#include "sorters.h"
 
 #define ARR_SIZE    25u
 
@@ -24,9 +24,9 @@ int main()
 {
     int arr[ARR_SIZE] = {0u};
 
-    srand(&arr[0]);
-    
-    for(int i = 0 ; i < ARR_SIZE ; i++){
+    srand((unsigned long int)&arr[0]);
+
+    for (int i = 0; i < ARR_SIZE; i++) {
         arr[i] = rand() % 1000u;
     }
 

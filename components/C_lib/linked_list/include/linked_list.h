@@ -9,6 +9,10 @@
 #ifndef _LINKED_LIST_H
 #define _LINKED_LIST_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -30,6 +34,7 @@ bool reverse_i(node_t **head);
 bool reverse_r(node_t **head);
 
 node_t* search_val(node_t *head, uint8_t val);
+bool fill_list_r(node_t **head, int16_t top, int16_t incr);
 
 bool empty_list(node_t **head);
 void print_list_rf(const node_t *head);
@@ -37,4 +42,7 @@ void print_list_rb(const node_t *head);
 
 void print_list(const node_t *head);
 
+#ifdef __cplusplus
+}
+#endif /* extern 'C' */
 #endif /* _LINKED_LIST_H */

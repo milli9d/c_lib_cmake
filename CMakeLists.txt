@@ -25,9 +25,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/components)
 # add test bench program
 add_executable(test_bench test_bench.cpp)
 
-target_link_libraries(test_bench PRIVATE
-    C::array
-    C::linked_list
+target_link_libraries(test_bench 
+    PUBLIC   C::linked_list
 )
 
 add_custom_target(run_tb COMMAND test_bench)

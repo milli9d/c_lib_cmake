@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "include/array.h"
+#include "array.h"
 
 #define ARR_DATA_T uint16_t
 #define ARR_LEN 25u

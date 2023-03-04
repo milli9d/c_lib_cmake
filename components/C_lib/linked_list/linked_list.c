@@ -348,6 +348,33 @@ bool empty_list(node_t** head)
 }
 
 /**
+ * @brief Fill a linked list with values upto TOP with increments of incr
+ * @param head 
+ * @param top 
+ * @param incr 
+ * @return 
+ */
+bool fill_list_r(node_t **head, int16_t top, int16_t incr)
+{
+    /* sanity check */
+    if (head == NULL || incr <= 0 || top <= 0) {
+        return false;
+    }
+
+    /* terminator */
+    if (top <= 0u) {
+        return true;
+    }
+
+    /* perform recursive action unit */
+    push_node(head, (uint8_t)top);
+
+    /* recurse */
+    return fill_list_r(head, top - incr, incr);
+}
+
+
+/**
  * @brief Pretty print a linked list
  */
 void print_list(const node_t *head)

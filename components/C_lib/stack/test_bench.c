@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "include/stack.h"
-#include  "../linked_list/include/linked_list.h"
+#include "stack.h"
+#include "linked_list.h"
 
 int main(int argc, char **argv)
 {

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "include/hashmap.h"
+#include "hashmap.h"
 
 int main(int argc, char **argv)
 {

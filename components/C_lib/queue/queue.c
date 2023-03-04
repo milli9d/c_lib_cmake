@@ -10,6 +10,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include  "../../linked_list/include/linked_list.h"
-#include "include/queue.h"
+#include "linked_list.h"
+#include "queue.h"
 

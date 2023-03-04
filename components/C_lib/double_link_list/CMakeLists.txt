@@ -2,7 +2,7 @@
 add_library(c_double_linked_list SHARED double_linked_list.c)
 
 # includes
-target_include_directories(c_double_linked_list PRIVATE
+target_include_directories(c_double_linked_list PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -11,8 +11,8 @@ add_library(C::double_linked_list ALIAS c_double_linked_list)
 
 add_executable(double_linked_list_tb test_bench.c)
 
-target_link_libraries(double_linked_list_tb 
-        PRIVATE C::double_linked_list
+target_link_libraries(double_linked_list_tb
+    PUBLIC C::double_linked_list
 )
 
 add_custom_target(double_linked_list_demo COMMAND double_linked_list_tb)
