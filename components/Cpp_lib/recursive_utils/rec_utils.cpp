@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "rec_utils.hpp"
 
@@ -11,6 +12,7 @@ namespace cpp_lib
 {
 
     static void print_bin_r(uint64_t n);
+    static bool can_sum_r(std::vector<int> &arr, int target, std::unordered_map<int, bool> &map);
 
     /**
      * @brief Recursively print a number in binary format
@@ -114,5 +116,56 @@ namespace cpp_lib
         map.insert({n, out});
 
         return out;
+    }
+
+    /**
+     * @brief
+     * @param arr
+     * @param target
+     * @return
+     */
+    static bool can_sum_r(std::vector<int> &arr, int target, std::unordered_map<int, bool> &map)
+    {
+        if (map.find(target) != map.end()) {
+            return map.at(target);
+        }
+
+        /* success case */
+        if (target == 0) {
+            return true;
+        }
+
+        if (target < 0) {
+            return false;
+        }
+
+        bool out = false;
+
+        for (int i : arr) {
+            int rem = target - i;
+            out |= can_sum_r(arr, rem, map);
+        }
+
+        map.insert({target, out});
+        return out;
+    }
+
+    /**
+     * @brief Return if array can add up to target
+     * @param arr 
+     * @param target 
+     * @return 
+     */
+    bool can_sum(std::vector<int> &arr, int target)
+    {
+        std::unordered_map<int, bool> map{};
+
+        printf("Can Sum? [ ");
+        for(int i : arr) {
+            printf("%d ", i);    
+        }
+        printf("] Target = %d\n", target);
+
+        return can_sum_r(arr, target, map);
     }
 }
