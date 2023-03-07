@@ -53,6 +53,21 @@ namespace cpp_lib
      * @return 
      */
     bool can_sum(std::vector<int> &arr, int target);
+
+    /**
+     * @brief 
+     * @param arr 
+     * @param target 
+     */
+    void how_sum(std::vector<int> &arr, int target);
+
+    /**
+     * @brief 
+     * @param arr 
+     * @param target 
+     */
+    void best_sum(std::vector<int> &arr, int target);
+
 }
 
 /**

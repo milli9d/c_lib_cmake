@@ -15,11 +15,10 @@
 #include "linked_list.h"
 #include "rec_utils.hpp"
 
-
-void print_tf(bool condition) {
-    condition ? printf("True\n") : printf("False\n"); 
+void print_tf(bool condition)
+{
+    condition ? printf("True\n") : printf("False\n");
 }
-
 
 void demo_run()
 {
@@ -36,7 +35,8 @@ void demo_run()
 
     printf("Sum of natural nums till %ld is %ld\n", val, cpp_lib::sum_nums_r(0u));
 
-    for (uint64_t i = 0; i < 50u; i++) {
+    for (uint64_t i = 0; i < 50u; i++)
+    {
         printf("fib[%ld] = %ld \n", i, cpp_lib::fib_r(i));
     }
 
@@ -56,15 +56,22 @@ void grid_traveler_demo()
     std::cout << test.count_ways(15u, 66u) << std::endl;
 }
 
+void recursive_demos()
+{
+    std::vector<int> test = {2, 3, 10, 50, 100};
 
+    print_tf(cpp_lib::can_sum(test, 47010));
+    print_tf(cpp_lib::can_sum(test, 25401));
+
+    cpp_lib::how_sum(test, 54);
+    cpp_lib::best_sum(test, 54);
+}
 
 int main()
 {
     // grid_traveler_demo();
 
-    std::vector<int> test = {1,5,10,25,50,100};
-    print_tf(cpp_lib::can_sum(test, 47010));
-    print_tf(cpp_lib::can_sum(test, 25400));
+    recursive_demos();
 
     return 0;
 }

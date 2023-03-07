@@ -10,9 +10,27 @@
 
 namespace cpp_lib
 {
-
+    /* static declarations */
     static void print_bin_r(uint64_t n);
-    static bool can_sum_r(std::vector<int> &arr, int target, std::unordered_map<int, bool> &map);
+    static void print_tf(bool condition);
+    static bool can_sum_r(std::vector<int> &arr, int target,
+                          std::unordered_map<int, bool> &map);
+    static std::vector<std::vector<int>>
+    how_sum_r(std::vector<int> &arr, int target,
+              std::unordered_map<int, std::vector<std::vector<int>>> &map);
+    static std::vector<int>
+    best_sum_r(std::vector<int> &arr, int target,
+               std::unordered_map<int, std::vector<int>> map);
+
+
+    /**
+     * @brief Print True or False
+     * @param condition 
+     */
+    static void print_tf(bool condition)
+    {
+        condition ? printf("True\n") : printf("False\n");
+    }
 
     /**
      * @brief Recursively print a number in binary format
@@ -135,12 +153,14 @@ namespace cpp_lib
             return true;
         }
 
+        /* if target exceeded, then we are out of luck */
         if (target < 0) {
             return false;
         }
 
         bool out = false;
 
+        /* infer if target is reachable on any branch of tree */
         for (int i : arr) {
             int rem = target - i;
             out |= can_sum_r(arr, rem, map);
@@ -167,5 +187,150 @@ namespace cpp_lib
         printf("] Target = %d\n", target);
 
         return can_sum_r(arr, target, map);
+    }
+
+    /**
+     * @brief 
+     * @param arr 
+     * @param target 
+     * @param map 
+     * @return 
+     */
+    static std::vector<std::vector<int>> how_sum_r(std::vector<int> &arr, int target, std::unordered_map<int, std::vector<std::vector<int>>>& map)
+    {
+        if(map.find(target) != map.end()) {
+            return map.at(target);
+        }
+
+        /* if target reached, then return empty array in array of arrays */
+        if (target == 0 ) {
+            return {{}};
+        }
+
+        /* if target breached, then return empty array of arrays */
+        if (target < 0) {
+            return {};
+        }
+
+        std::vector<std::vector<int>> out;
+
+        /* get next iteration */
+        for(int i : arr) {
+            /* get results from next iteration */
+            int rem = target - i;
+            std::vector<std::vector<int>> temp = how_sum_r(arr, rem, map);
+            
+            /* if result arrays are not null, then add them to output arrays + add current value */
+            for(std::vector<int> vec : temp) {
+                vec.push_back(i);
+                out.push_back(vec);
+            }
+        }
+
+        map.insert({target, out});
+        return out;
+    }
+
+    /**
+     * @brief 
+     * @param arr 
+     * @param target 
+     */
+    void how_sum(std::vector<int> &arr, int target)
+    {
+        std::unordered_map<int, std::vector<std::vector<int>>> map{};
+
+        std::vector<std::vector<int>> res = how_sum_r(arr, target, map);
+
+        printf("How Sum? [ ");
+        for (int i : arr) {
+            printf("%d ", i);
+        }
+        printf("] Target = %d\n", target);
+
+        print_tf(!res.empty());
+
+        std::vector<int>* best{}; 
+        int min_count = INT32_MAX;
+
+        for (auto &vec : res) {
+            if (vec.size() < min_count) {
+                min_count = vec.size();
+                best = &vec;
+            }
+        }
+
+        if (best != NULL) {
+            printf("Best\n");
+            for (int i : *best) {
+                printf("%d ", i);
+            }
+            printf("\n");
+        }
+    }
+
+    /**
+     * @brief 
+     * @param arr 
+     * @param target 
+     * @param map 
+     * @return 
+     */
+    static std::vector<int> best_sum_r(std::vector<int>& arr , int target, std::unordered_map<int, std::vector<int>> map)
+    {
+        if(map.find(target) != map.end()) {
+            return map.at(target);
+        }
+        
+        if(target == 0) {
+            return {};
+        }
+
+        if(target < 0) {
+            return {-1} ;
+        }
+
+        std::vector<int> out = {-1};
+
+        for(int i : arr) {
+            int rem = target - i;
+            std::vector<int> temp = best_sum_r(arr, rem, map);
+            
+            if( temp != std::vector<int>({-1})) {
+                temp.push_back(i);
+                if (out == std::vector<int>({-1}) || out.size() > temp.size()) {
+                    out = temp;
+                }
+            }
+        }
+
+        map.insert({target, out});
+        return out;
+    }
+
+    /**
+     * @brief 
+     * @param arr 
+     * @param target 
+     */
+    void best_sum(std::vector<int> &arr, int target)
+    {
+        std::unordered_map<int, std::vector<int>> map{};
+
+        std::vector<int> res = best_sum_r(arr, target, map);
+
+        printf("Best Sum? [ ");
+        for (int i : arr) {
+            printf("%d ", i);
+        }
+        printf("] Target = %d\n", target);
+
+        if (res.empty() != true) {
+            printf("Best\n");
+            for (int i : res) {
+                printf("%d ", i);
+            }
+            printf("\n");
+        }
     }
 }
