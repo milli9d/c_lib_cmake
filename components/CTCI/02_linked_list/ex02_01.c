@@ -82,16 +82,16 @@ int main()
 
     node_t* myList = NULL;
 
-    append_node(&myList, 1u);
-    append_node(&myList, 2u);
-    append_node(&myList, 1u);
-    append_node(&myList, 4u);
-    append_node(&myList, 2u);
-    append_node(&myList, 3u);
+    list_push_front(&myList, 1u);
+    list_push_front(&myList, 2u);
+    list_push_front(&myList, 1u);
+    list_push_front(&myList, 4u);
+    list_push_front(&myList, 2u);
+    list_push_front(&myList, 3u);
 
     remove_dups(&myList);
 
-    print_list(myList);
+    list_print(myList);
 
     return 0;
 }

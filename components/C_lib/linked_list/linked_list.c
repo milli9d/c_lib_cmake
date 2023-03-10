@@ -1,24 +1,22 @@
 /**
- * @brief Linked List
+ * @brief C Linked List container implementation
  *
- * @author Milind Singh
  *
- * @date 2/1/2023
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "include/linked_list.h"
+#include "linked_list.h"
 
-/* ============================================================ Private API */
+/* ============================================================== Static API */
 
-static node_t *new_node(uint8_t val);
-static node_t *reverse_sub_list(node_t *head);
+static node_t *new_node(uint32_t val);
 
 /**
- * @brief Make a new node with value val
+ * @brief Allocate a new node and fill with val
  */
-static node_t *new_node(uint8_t val)
+static node_t *new_node(uint32_t val)
 {
     node_t *out = (node_t *)malloc(sizeof(node_t));
     out->next = NULL;
@@ -26,372 +24,219 @@ static node_t *new_node(uint8_t val)
     return out;
 }
 
-/**
- * @brief Recursion for reversing a linked list
-*/
-static node_t *reverse_sub_list(node_t *head)
-{
-    if (head == NULL || head->next == NULL) {
-        return head;
-    }
-
-    node_t *rest = reverse_sub_list(head->next);
-
-    head->next->next = head;
-    head->next = NULL;
-
-    return rest;
-}
-
-/* ============================================================ Public API */
+/* ============================================================== Public API */
 
 /**
- * @brief Push a node to the front of the linked list
+ * @brief Pretty print the linked list
+ *
+ * @param head  List to print
  */
-void push_node(node_t **head, uint8_t val)
+void list_print(const node_t *head)
 {
-    /* sanity check */
-    if (head == NULL) {
-        printf("ERROR: List is invalid.\n");
-        return;
+    printf("HEAD -> ");
+    while (head != NULL) {
+        printf("%d -> ", head->val);
+        head = head->next;
     }
-
-    /* make new node */
-    node_t *out = new_node(val);
-
-    /* check if list is empty */
-    if (*head == NULL) {
-        /* make this new node the head of the list */
-        *head = out;
-    } else {
-        /* attach current head to new node and replace head */
-        out->next = *head;
-        *head = out;
-    }
+    printf("TAIL\n");
 }
 
 /**
- * @brief Append a new node to the end of a linked list
+ * @brief Push to front of list
+ *
  */
-void append_node(node_t **head, uint8_t val)
+err_t list_push_front(node_t **head, uint32_t val)
 {
-    /* sanity check */
+    /* sanity checks */
     if (head == NULL) {
-        printf("ERROR: List is invalid.\n");
-        return;
+        return ERR_INVALID_POINTER;
     }
 
-    /* make new node */
+    /* allocate a new node */
     node_t *n_node = new_node(val);
 
-    /* check if list is empty */
-    if (*head == NULL) {
-        /* make new node the head of the list */
-        *head = n_node;
-    } else {
-        /* traverse to the last element of the list */
-        node_t *itr = *head;
-        while (itr != NULL && itr->next != NULL) {
-            itr = itr->next;
-        }
-        /* attach node to the last element */
-        itr->next = n_node;
+    /* if there is already content in list, then attach to new node */
+    if (*head != NULL) {
+        n_node->next = *head;
     }
+    *head = n_node;
+
+    return ERR_OK;
 }
 
 /**
- * @brief Pop a node from the front of list
+ * @brief Get size of a linked list
+ *
+ * O(n) time
+ *
+ * @param   head    Linked list to measure
+ * @return          size of linked list
  */
-bool pop_node(node_t **head)
+size_t list_size(node_t *head)
 {
-    /* gather pointers for delete */
-    node_t *to_delete = *head;
-
-    /* detach node */
-    *head = (*head)->next;
-
-    /* free node */
-    free(to_delete);
-    to_delete = NULL;
-
-    return true; 
+    size_t count = 0u;
+    while (head != NULL) {
+        count++;
+        head = head->next;
+    }
+    return count;
 }
 
 /**
- * @brief Delete a node at idx
+ * @brief Insert a node into the linked list
+ *
+ * O(idx) time complexity.
+ *
+ * @param   head    linked list pointer
+ * @param   idx     index to insert to
+ * @param   val     value to insert
+ *
+ * @return err_t    error code
  */
-bool delete_node(node_t **head, uint32_t idx)
+err_t list_insert(node_t **head, size_t idx, uint32_t val)
 {
-    /* sanity check */
-    if (head == NULL || *head == NULL) {
-        printf("ERROR: List is invalid.\n");
-        return false;
+    /* sanity checks */
+    if (head == NULL) {
+        printf("Error: Invalid List.\n");
+        return ERR_INVALID_POINTER;
     }
 
-    /* special case; delete HEAD */
+    /* CASE-1: if idx is 0u */
     if (idx == 0u) {
-        return pop_node(head);
+        return list_push_front(head, val);
     }
 
-    /* if list is not empty then find and delete idx */
-    node_t* itr = *head;
-
-    /* traverse to the node before idx */
+    /* CASE-2: if index is within bounds */
+    /* traverse to node before idx */
+    node_t *itr = *head;
     while (itr != NULL && idx > 1u) {
         itr = itr->next;
         idx--;
     }
 
-    /* check that the element to be deleted exists */
-    if (itr == NULL || itr->next == NULL) {
-        printf("ERROR: Invalid idx.\n");
-        return false;
+    /* if we overflowed then exit */
+    if (itr == NULL || idx > 1u) {
+        return ERR_OUT_OF_RANGE;
     }
 
-    /* now we have itr pointing to element before element to be deleted */
-    /* gather pointers for delete */
-    node_t* to_delete = itr->next;
-    node_t* link_next = to_delete->next;
-
-    /* detach node */
-    itr->next = link_next;
-
-    /* free node */
-    free(to_delete);
-    to_delete = NULL;
-
-    return true;
-}
-
-/**
- * @brief Insert node at given index , 
- * 
- * @return true     if node insert failed 
- * @return false    if node inserted
- */
-bool insert_node(node_t** head, uint32_t idx, uint8_t val)
-{
-    /* sanity check */
-    if (head == NULL) {
-        printf("ERROR: List is invalid.\n");
-        return false;
-    }
-
-    /* if append at head */
-    if (idx == 0) {
-        push_node(head, val);
-        return true;
-    }
-
-    /* traverse to element befor idx element */
-    node_t *itr = *head;
-    while (itr != NULL && (idx--) > 1u) {
-        itr = itr->next;
-    }
-
-    /* check for overflow */
-    if (itr == NULL) {
-        printf("ERROR: Insert index out of bounds.\n");
-    }
-
-    /* gather pointers */
-    node_t *link_next = itr->next;
-
-    /* insert the new node */
+    /* add node in between */
     node_t *n_node = new_node(val);
-    n_node->next = link_next;
+
+    /* if there was more list after this idx , attach that */
+    if (itr->next != NULL) {
+        n_node->next = itr->next;
+    }
+
+    /* attach node */
     itr->next = n_node;
 
-    return true;
+    return ERR_OK;
 }
 
 /**
- * @brief Reverse a Linked List recursively
+ * @brief Pop the head node from the linked list
+ * 
+ * @param   head    
+ * 
+ * @return  err_t    error code
 */
-bool reverse_r(node_t **head)
+err_t list_pop_head(node_t **head)
 {
-    if (head == NULL) {
-        printf("ERROR: List is invalid.\n");
-        return false;
+    /* sanity check */
+    if(head == NULL) {
+        return ERR_INVALID_POINTER;
     }
-    *head = reverse_sub_list(*head);
-    return true;
+
+    /* copy head for deletion */
+    node_t *to_del = *head;
+
+    /* change head to whatever's next */
+    *head = (*head)->next;
+
+    /* deallocate memory */
+    free(to_del);
+    to_del = NULL;
+
+    return ERR_OK;
 }
 
 /**
- * @brief Reverse the linked list iteratively 
+ * @brief Delete idx element from linked list
+ * 
+ * @param head
+ * @param idx
+ * @return
+ *
  */
-bool reverse_i(node_t** head)
+err_t list_delete(node_t **head, size_t idx)
+{
+    /* sanity check */
+    if(head == NULL || *head == NULL) {
+        return ERR_INVALID_POINTER;
+    }
+
+    /* special case: delete head */
+    if (idx == 0u) {
+        return list_pop_head(head);
+    }
+
+    /* traverse to the node before idx to be deleted */
+    node_t* itr  = *head;
+    while (itr != NULL && idx > 1u) {
+        itr = itr->next;
+        idx--;
+    }
+
+    /* check if we overflowed or node doesn't exist */
+    if(itr == NULL || itr->next == NULL) {
+        printf("Error: Delete index oveflowed\n");
+        return ERR_OUT_OF_RANGE;
+    }
+
+    /* collect pointers */
+    node_t* to_del = itr->next;
+    node_t* link_fw = to_del->next;
+
+    /* connect rest of the list */
+    itr->next = link_fw;
+
+    /* deallocate node */
+    free(to_del);
+    to_del = NULL;
+
+    return ERR_OK;
+}
+
+/**
+ * @brief Iteratively reverse a linked list
+ * @param       head        head of the list
+ * @return      err_t       error code
+ */
+err_t list_reverse_i(node_t** head)
 {
     /* sanity check */
     if (head == NULL || *head == NULL) {
-        printf("ERROR: List is invalid.\n");
-        return false;
+        return ERR_INVALID_POINTER;
     }
 
-    /* if there's only one element */
-    if ((*head)->next == NULL) {
-        printf("WARN: List is only one element.\n");
-        return true;
+    /* iterate and reverse links on each element pair */
+    node_t *curr = *head;
+    node_t *prev = NULL;
+
+    while (curr != NULL) {
+        /* store to traverse to next node */
+        node_t *link_fw = curr->next;
+
+        /* reverse links */
+        curr->next = prev;
+
+        /* traverse to next pair */
+        prev = curr;
+        curr = link_fw;
     }
 
-    /* reverse the list */
-    node_t* first = NULL;
-    node_t* second = *head;
+    /* set head to last element seen */
+    *head = prev;
 
-    /* traverse till the last element and reverse all pointers */
-    while (second != NULL) {
-        /* save next node for traversal */
-        node_t* link_next = second->next;
-
-        /* reverse link */
-        second->next = first;
-
-        /* traverse */
-        first = second;
-        second = link_next;
-    }
-
-    *head = first;
-
-    return true;
-}
-
-/**
- * @brief Search for the given value in the list
-*/
-node_t* search_val(node_t *head, uint8_t val)
-{
-    node_t* out = NULL;
-    
-    if(head == NULL) {
-        printf("Error: {search} List is empty.\n");
-        return head;
-    }
-
-    /* traverse and find node */
-    out = head;
-    while(out != NULL && out->next != NULL) {
-        if(out->val == val) {
-            return out;
-        }
-        out = out->next;
-    }
-
-    return NULL;
-}
-
-/**
- * @brief Pretty print list recursively reverse direction
-*/
-void print_list_rb(const node_t *head)
-{
-    /* terminating condition */
-    if (head == NULL) {
-        printf("ERROR: {print} List is empty.\n");
-        return;
-    }
-    print_list_rb(head->next);
-    printf("[%d] -- ", head->val);
-}
-
-/**
- * @brief Pretty print list recursively forward direction
-*/
-void print_list_rf(const node_t *head)
-{
-    /* terminating condition */
-    if (head == NULL) {
-        printf("\n");
-        return;
-    }
-    printf("[%d] -- ", head->val);
-    print_list_rf(head->next);
-}
-
-/**
- * @brief Empty list recursively forward direction
-*/
-static node_t *empty_list_r(node_t *head)
-{
-    /* terminating condition */
-    if (head == NULL) {
-        printf("\n");
-        return head;
-    }
-    
-    /* gather pointers */
-    node_t *link_forward = head->next;
-    node_t *to_delete = head;
-    
-    /* pop node */
-    free(to_delete);
-    to_delete = NULL;
-    
-    /* return rest of the list */
-    return empty_list_r(link_forward);
-}
-
-/**
- * @brief Empty list recursively forward direction
-*/
-bool empty_list(node_t** head)
-{
-    /* sanity check */
-    if (head == NULL) {
-        printf("ERROR: {empty_list} List is empty.\n");
-        return false;
-    }
-    /* start recursion */
-    *head = empty_list_r(*head);
-    return true;
-}
-
-/**
- * @brief Fill a linked list with values upto TOP with increments of incr
- * @param head 
- * @param top 
- * @param incr 
- * @return 
- */
-bool fill_list_r(node_t **head, int16_t top, int16_t incr)
-{
-    /* sanity check */
-    if (head == NULL || incr <= 0 || top <= 0) {
-        return false;
-    }
-
-    /* terminator */
-    if (top <= 0u) {
-        return true;
-    }
-
-    /* perform recursive action unit */
-    push_node(head, (uint8_t)top);
-
-    /* recurse */
-    return fill_list_r(head, top - incr, incr);
-}
-
-
-/**
- * @brief Pretty print a linked list
- */
-void print_list(const node_t *head)
-{
-    /* sanity check */
-    if (head == NULL) {
-        printf("ERROR: {print} List is empty.\n");
-        return;
-    }
-
-    /* iterate over list and print nodes */
-    const node_t *itr = head;
-    uint32_t idx = 0u;
-    printf("HEAD -->");
-    while (itr != NULL) {
-        printf(" [%d : %d] -->", idx++, itr->val);
-        itr = itr->next;
-    }
-    printf(" TAIL\n");
+    return ERR_OK;
 }

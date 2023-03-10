@@ -1,5 +1,7 @@
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Cpp_lib)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/C_lib)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CTCI)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Cpp_lib)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CTCI)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/applications)
+

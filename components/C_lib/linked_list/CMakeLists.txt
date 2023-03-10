@@ -9,7 +9,7 @@ target_include_directories(c_linked_list
 # add alias for ease of usage
 add_library(C::linked_list ALIAS c_linked_list)
 
-add_executable(linked_list_tb test_bench.c)
+add_executable(linked_list_tb test_bench.cpp)
 
 target_link_libraries(linked_list_tb
     PUBLIC C::linked_list

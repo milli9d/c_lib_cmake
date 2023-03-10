@@ -37,7 +37,7 @@ bool stack_push(stack_t *stack, uint8_t val)
     }
 
     /* push node */
-    push_node(&stack->top, val);
+    list_push_front(&stack->top, val);
     stack->size++;
 
     return true;

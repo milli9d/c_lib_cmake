@@ -10,7 +10,8 @@
 #define _LINKED_LIST_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <stdio.h>
@@ -18,29 +19,34 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct node_s
-{
-    struct node_s *next;
-    uint8_t val;
-} node_t;
+    typedef enum err_e
+    {
+        ERR_OK = 0,
+        ERR_OUT_OF_RANGE = 1,
+        ERR_INVALID_POINTER = 2,
+        ERR_GENERIC = 99
+    } err_t;
 
-bool pop_node(node_t **head);
-void push_node(node_t **head, uint8_t val);
-void append_node(node_t **head, uint8_t val);
-bool delete_node(node_t **head, uint32_t idx);
-bool insert_node(node_t **head, uint32_t idx, uint8_t val);
+    typedef struct node_s
+    {
+        struct node_s *next;
+        uint32_t val;
+    } node_t;
 
-bool reverse_i(node_t **head);
-bool reverse_r(node_t **head);
+    /* ================================================================== Miscellaneous */
 
-node_t* search_val(node_t *head, uint8_t val);
-bool fill_list_r(node_t **head, int16_t top, int16_t incr);
+    void list_print(const node_t *head);
+    size_t list_size(node_t *head);
+    void list_error_printer(int32_t error);
 
-bool empty_list(node_t **head);
-void print_list_rf(const node_t *head);
-void print_list_rb(const node_t *head);
+    /* ================================================================== List [Element] Manipulation */
 
-void print_list(const node_t *head);
+    err_t list_push_front(node_t **head, uint32_t val);
+    err_t list_insert(node_t **head, size_t idx, uint32_t val);
+    err_t list_delete(node_t **head, size_t idx);
+
+    /* ================================================================== List [Whole]  Manipulation */
+    err_t list_reverse_i(node_t **head);
 
 #ifdef __cplusplus
 }
